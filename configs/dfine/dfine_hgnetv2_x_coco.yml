@@ -54,3 +54,6 @@ train_dataloader:
     stop_epoch: 72
     ema_restart_decay: 0.9998
     base_size_repeat: 3
+
+val_dataloader:
+  total_batch_size: 128
