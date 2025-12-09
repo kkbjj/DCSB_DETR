@@ -222,7 +222,25 @@ class BaseSolver(object):
         for k, v in self.__dict__.items():
             if hasattr(v, "load_state_dict") and k in state:
                 v = dist_utils.de_parallel(v)
-                v.load_state_dict(state[k])
+                # v.load_state_dict(state[k])
+                # ==== 修改开始：对 model 的 state_dict 过滤 anchors / valid_mask ====
+                sub_state = state[k]
+                if k == "model":
+                    # 有的 ckpt 可能是 {'model': {...}} 这种普通字典
+                    # 我们只在 key 名里包含 decoder.anchors / decoder.valid_mask 的条目上动手
+                    to_delete = [
+                    name for name in list(sub_state.keys())
+                    if "decoder.anchors" in name or "decoder.valid_mask" in name
+                ]
+                    for name in to_delete:
+                        print(f"[skip] skip loading {k}.{name}")
+                        del sub_state[name]
+                    # 防止因为缺少这两个 key 报错，strict=False 更稳妥
+                    v.load_state_dict(sub_state, strict=False)
+                else:
+                    # 其他模块保持原样
+                    v.load_state_dict(sub_state)
+                # ==== 修改结束 ====
                 print(f"Load {k}.state_dict")
 
             if hasattr(v, "load_state_dict") and k not in state:

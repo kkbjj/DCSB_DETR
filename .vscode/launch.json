@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Dfine",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/train.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false,
+            "env": {"CUDA_VISIBLE_DEVICES": "0"},
+            "args": [
+                "-c", "configs/dfine/dfine_hgnetv2_n_coco.yml",
+                "--test-only",
+                "-r", "model/dfine_n_coco.pth",
+                "--update", "val_dataloader.total_batch_size=256"
+  ]
+        }
+    ]
+}
