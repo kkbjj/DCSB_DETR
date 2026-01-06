@@ -32,7 +32,7 @@ val_dataloader:
   dataset:
     transforms:
       ops:
-        - {type: Resize, size: [768, 768], }
+        - {type: Resize, size: [640, 640], }
         - {type: ConvertPILImage, dtype: 'float32', scale: True}
   shuffle: False
   total_batch_size: 64
